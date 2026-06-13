@@ -1,0 +1,43 @@
+<nav class="navbar glass-card">
+  <div class="nav-container">
+    <!-- Brand Logo -->
+    <div class="nav-brand" [routerLink]="['/']">
+      <i class="fa-solid fa-shield-halved brand-icon"></i>
+      <span class="brand-text">SecureAuth</span>
+    </div>
+
+    <!-- Active Navigation Links -->
+    <div class="nav-links" *ngIf="isAuthenticated$ | async">
+      <a 
+        *ngIf="user$ | async as user" 
+        [routerLink]="user.role === 'admin' ? ['/dashboard/admin'] : ['/dashboard/user']"
+        routerLinkActive="active-link" 
+        class="nav-link"
+      >
+        <i class="fa-solid fa-chart-line"></i> Dashboard
+      </a>
+    </div>
+
+    <!-- Auth Widget -->
+    <div class="nav-auth-section">
+      <ng-container *ngIf="isAuthenticated$ | async; else loginBtn">
+        <div class="user-info" *ngIf="user$ | async as user">
+          <img [src]="user.avatar" alt="Avatar" class="nav-avatar" />
+          <span class="nav-username">{{ user.name }}</span>
+          <span class="badge" [class.badge-admin]="user.role === 'admin'" [class.badge-user]="user.role !== 'admin'">
+            {{ user.role }}
+          </span>
+        </div>
+        <button class="btn btn-secondary logout-btn btn-nav" (click)="logout()">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+        </button>
+      </ng-container>
+
+      <ng-template #loginBtn>
+        <a [routerLink]="['/login']" class="btn btn-primary btn-nav">
+          <i class="fa-solid fa-key"></i> Sign In
+        </a>
+      </ng-template>
+    </div>
+  </div>
+</nav>

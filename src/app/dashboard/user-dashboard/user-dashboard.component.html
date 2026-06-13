@@ -1,0 +1,73 @@
+<div class="dashboard-container" *ngIf="user$ | async as user">
+  <header class="dashboard-header animate-fade-in">
+    <div class="welcome-text">
+      <h1>Welcome, {{ user.name }}!</h1>
+      <p>Here is your personal workspace overview.</p>
+    </div>
+    <div class="header-actions">
+      <span class="badge badge-user">
+        <i class="fa-solid fa-circle-user"></i> Customer Portal
+      </span>
+    </div>
+  </header>
+
+  <div class="dashboard-grid animate-fade-in">
+    <!-- Profile Card -->
+    <div class="profile-card glass-card">
+      <div class="profile-avatar-container">
+        <img [src]="user.avatar" alt="Avatar" class="profile-avatar" />
+        <div class="avatar-glow"></div>
+      </div>
+      <div class="profile-details">
+        <h3>{{ user.name }}</h3>
+        <p class="profile-email"><i class="fa-regular fa-envelope"></i> {{ user.email }}</p>
+        <p class="profile-role"><i class="fa-solid fa-user-tag text-primary"></i> Role: <span class="capitalize">{{ user.role }}</span></p>
+        <p class="profile-id"><i class="fa-solid fa-fingerprint text-primary"></i> Account ID: <span>#{{ user.id }}</span></p>
+      </div>
+    </div>
+
+    <!-- Activity Panel -->
+    <div class="activity-panel glass-card">
+      <h3 class="panel-title">My Recent Activity</h3>
+      <div class="activity-list">
+        <div class="activity-item">
+          <div class="activity-icon bg-indigo">
+            <i class="fa-solid fa-cart-shopping"></i>
+          </div>
+          <div class="activity-content">
+            <p class="activity-title">Order #8934 placed successfully</p>
+            <p class="activity-time">2 hours ago</p>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon bg-cyan">
+            <i class="fa-solid fa-key"></i>
+          </div>
+          <div class="activity-content">
+            <p class="activity-title">Logged in from new IP address</p>
+            <p class="activity-time">4 hours ago</p>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon bg-teal">
+            <i class="fa-solid fa-user-pen"></i>
+          </div>
+          <div class="activity-content">
+            <p class="activity-title">Avatar synchronized from Gravatar</p>
+            <p class="activity-time">Yesterday</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Information Section -->
+  <div class="info-section glass-card animate-fade-in">
+    <h3><i class="fa-solid fa-shield-halved text-primary"></i> Client Authorization Note</h3>
+    <p>
+      You are authenticated under the <b>{{ user.role }}</b> profile. Your access tokens are saved in the <b>NgRx Store</b> and stored securely in local storage.
+      An HTTP Interceptor is active, automatically injecting your authorization token into all API requests. 
+      Furthermore, trying to access administration areas (e.g. <code>/dashboard/admin</code>) will trigger the <code>AdminGuard</code>, which blocks the navigation and returns you safely back to this screen.
+    </p>
+  </div>
+</div>

@@ -1,0 +1,118 @@
+<div class="login-wrapper">
+  <div class="login-card glass-card">
+    <!-- Header -->
+    <div class="login-header">
+      <div class="brand-logo">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <h2>SecureAuth Portal</h2>
+      <p>Sign in to access your customized dashboard</p>
+    </div>
+
+    <!-- Error Alert -->
+    <div *ngIf="error$ | async as error" class="alert alert-danger animate-fade-in">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <span class="alert-message">{{ error }}</span>
+    </div>
+
+    <!-- Login Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      
+      <!-- Email Group -->
+      <div class="form-group">
+        <label for="email" class="form-label">Email Address</label>
+        <div class="form-input-container">
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="email" 
+            class="form-input" 
+            [class.input-error]="isFieldInvalid('email')"
+            placeholder="e.g. john@mail.com" 
+            autocomplete="email"
+          />
+          <i class="fa-solid fa-envelope form-input-icon"></i>
+        </div>
+        <div *ngIf="isFieldInvalid('email')" class="error-text">
+          <i class="fa-solid fa-circle-info"></i>
+          <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</span>
+          <span *ngIf="loginForm.get('email')?.errors?.['email']">Please enter a valid email address.</span>
+        </div>
+      </div>
+
+      <!-- Password Group -->
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
+        <div class="form-input-container">
+          <input 
+            type="password" 
+            id="password" 
+            formControlName="password" 
+            class="form-input" 
+            [class.input-error]="isFieldInvalid('password')"
+            placeholder="••••••••" 
+            autocomplete="current-password"
+          />
+          <i class="fa-solid fa-lock form-input-icon"></i>
+        </div>
+        <div *ngIf="isFieldInvalid('password')" class="error-text">
+          <i class="fa-solid fa-circle-info"></i>
+          <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</span>
+          <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 4 characters.</span>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-primary login-btn" [disabled]="(loading$ | async)">
+        <span *ngIf="loading$ | async" class="spinner-btn">
+          <i class="fa-solid fa-circle-notch fa-spin"></i> Authenticating...
+        </span>
+        <span *ngIf="!(loading$ | async)">
+          Sign In <i class="fa-solid fa-arrow-right-to-bracket"></i>
+        </span>
+      </button>
+    </form>
+
+    <!-- Demo Accounts Panel -->
+    <div class="demo-accounts-section">
+      <div class="demo-divider">
+        <span>Demo Credentials (Platzi API)</span>
+      </div>
+      <p class="demo-hint">Click a chip below to autofill. Default password is <b>changeme</b>.</p>
+      
+      <div *ngIf="fetchingDemoUsers" class="demo-loading">
+        <i class="fa-solid fa-circle-notch fa-spin"></i> Retrieving active users...
+      </div>
+
+      <div *ngIf="!fetchingDemoUsers" class="demo-grid animate-fade-in">
+        <!-- Admin Column -->
+        <div class="demo-column">
+          <span class="demo-col-title"><i class="fa-solid fa-user-shield text-danger"></i> Admins</span>
+          <button 
+            *ngFor="let admin of demoAdmins" 
+            type="button" 
+            class="demo-chip badge-admin"
+            (click)="autofill(admin.email, 'admin')"
+            title="Autofill {{ admin.name }}"
+          >
+            {{ admin.name }}
+          </button>
+        </div>
+
+        <!-- User Column -->
+        <div class="demo-column">
+          <span class="demo-col-title"><i class="fa-solid fa-user text-primary"></i> Customers</span>
+          <button 
+            *ngFor="let user of demoUsers" 
+            type="button" 
+            class="demo-chip badge-user"
+            (click)="autofill(user.email, 'customer')"
+            title="Autofill {{ user.name }}"
+          >
+            {{ user.name }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
