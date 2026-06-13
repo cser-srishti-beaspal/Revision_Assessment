@@ -19,6 +19,11 @@ export const AuthActions = createActionGroup({
     'Auto Login Success': props<{ token: string; user: UserProfile }>(),
     'Auto Login Failure': emptyProps(),
     
+    // Demo Users Flow
+    'Load Demo Users': emptyProps(),
+    'Load Demo Users Success': props<{ demoAdmins: any[]; demoUsers: any[] }>(),
+    'Load Demo Users Failure': props<{ error: string }>(),
+    
     // Logout Flow
     'Logout': emptyProps()
   }

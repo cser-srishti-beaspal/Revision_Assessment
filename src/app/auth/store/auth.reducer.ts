@@ -2,11 +2,28 @@ import { createReducer, on } from '@ngrx/store';
 import { AuthState } from '../models/user.model';
 import { AuthActions } from './auth.actions';
 
+// Synchronous restoration on startup to prevent guards from redirecting before effects fire
+const initialToken = localStorage.getItem('auth_token');
+const initialUserStr = localStorage.getItem('auth_user');
+let initialUser = null;
+
+if (initialUserStr) {
+  try {
+    initialUser = JSON.parse(initialUserStr);
+  } catch {
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('auth_user');
+  }
+}
+
 export const initialAuthState: AuthState = {
-  user: null,
-  token: null,
+  user: initialUser,
+  token: initialToken,
   loading: false,
-  error: null
+  error: null,
+  demoUsers: [],
+  demoAdmins: [],
+  loadingDemoUsers: false
 };
 
 export const authReducer = createReducer(
@@ -57,11 +74,36 @@ export const authReducer = createReducer(
   
   on(AuthActions.autoLoginFailure, (state) => ({
     ...state,
-    ...initialAuthState
+    user: null,
+    token: null,
+    loading: false,
+    error: null
   })),
   
-  // Logout Action
-  on(AuthActions.logout, () => ({
-    ...initialAuthState
+  // Load Demo Users Actions
+  on(AuthActions.loadDemoUsers, (state) => ({
+    ...state,
+    loadingDemoUsers: true
+  })),
+  
+  on(AuthActions.loadDemoUsersSuccess, (state, { demoAdmins, demoUsers }) => ({
+    ...state,
+    demoAdmins,
+    demoUsers,
+    loadingDemoUsers: false
+  })),
+  
+  on(AuthActions.loadDemoUsersFailure, (state) => ({
+    ...state,
+    loadingDemoUsers: false
+  })),
+  
+  // Logout Action (Preserves loaded demo users so the login page stays populated)
+  on(AuthActions.logout, (state) => ({
+    ...initialAuthState,
+    demoAdmins: state.demoAdmins,
+    demoUsers: state.demoUsers,
+    user: null,
+    token: null
   }))
 );

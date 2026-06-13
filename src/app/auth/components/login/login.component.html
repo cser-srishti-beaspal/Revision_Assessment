@@ -78,21 +78,21 @@
       <div class="demo-divider">
         <span>Demo Credentials (Platzi API)</span>
       </div>
-      <p class="demo-hint">Click a chip below to autofill. Default password is <b>changeme</b>.</p>
+      <p class="demo-hint">Click a chip below to autofill.</p>
       
-      <div *ngIf="fetchingDemoUsers" class="demo-loading">
+      <div *ngIf="fetchingDemoUsers$ | async" class="demo-loading">
         <i class="fa-solid fa-circle-notch fa-spin"></i> Retrieving active users...
       </div>
 
-      <div *ngIf="!fetchingDemoUsers" class="demo-grid animate-fade-in">
+      <div *ngIf="!(fetchingDemoUsers$ | async)" class="demo-grid animate-fade-in">
         <!-- Admin Column -->
         <div class="demo-column">
           <span class="demo-col-title"><i class="fa-solid fa-user-shield text-danger"></i> Admins</span>
           <button 
-            *ngFor="let admin of demoAdmins" 
+            *ngFor="let admin of demoAdmins$ | async" 
             type="button" 
             class="demo-chip badge-admin"
-            (click)="autofill(admin.email, 'admin')"
+            (click)="autofill(admin.email, admin.password)"
             title="Autofill {{ admin.name }}"
           >
             {{ admin.name }}
@@ -103,10 +103,10 @@
         <div class="demo-column">
           <span class="demo-col-title"><i class="fa-solid fa-user text-primary"></i> Customers</span>
           <button 
-            *ngFor="let user of demoUsers" 
+            *ngFor="let user of demoUsers$ | async" 
             type="button" 
             class="demo-chip badge-user"
-            (click)="autofill(user.email, 'customer')"
+            (click)="autofill(user.email, user.password)"
             title="Autofill {{ user.name }}"
           >
             {{ user.name }}

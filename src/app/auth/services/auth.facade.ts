@@ -8,7 +8,10 @@ import {
   selectAuthLoading, 
   selectAuthError, 
   selectUserRole, 
-  selectIsAdmin 
+  selectIsAdmin,
+  selectDemoUsers,
+  selectDemoAdmins,
+  selectLoadingDemoUsers
 } from '../store/auth.selectors';
 
 @Injectable({
@@ -26,6 +29,11 @@ export class AuthFacade {
   role$ = this.store.select(selectUserRole);
   isAdmin$ = this.store.select(selectIsAdmin);
 
+  // Demo Users Selectors
+  demoUsers$ = this.store.select(selectDemoUsers);
+  demoAdmins$ = this.store.select(selectDemoAdmins);
+  loadingDemoUsers$ = this.store.select(selectLoadingDemoUsers);
+
   // Exposing simple methods to dispatch actions
   login(email: string, password: string): void {
     this.store.dispatch(AuthActions.login({ email, password }));
@@ -37,5 +45,9 @@ export class AuthFacade {
 
   autoLogin(): void {
     this.store.dispatch(AuthActions.autoLogin());
+  }
+
+  loadDemoUsers(): void {
+    this.store.dispatch(AuthActions.loadDemoUsers());
   }
 }

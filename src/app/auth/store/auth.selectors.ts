@@ -37,3 +37,19 @@ export const selectIsAdmin = createSelector(
   selectUser,
   (user) => user ? user.role === 'admin' : false
 );
+
+// Demo Users Selectors
+export const selectDemoUsers = createSelector(
+  selectAuthState,
+  (state) => state.demoUsers
+);
+
+export const selectDemoAdmins = createSelector(
+  selectAuthState,
+  (state) => state.demoAdmins
+);
+
+export const selectLoadingDemoUsers = createSelector(
+  selectAuthState,
+  (state) => state.loadingDemoUsers
+);

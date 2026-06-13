@@ -18,6 +18,11 @@ export class AuthService {
     return this.http.get<UserProfile>(`${this.apiUrl}/profile`);
   }
 
+  getDemoUsers(): Observable<any[]> {
+    // Queries https://api.escuelajs.co/api/v1/users
+    return this.http.get<any[]>(`https://api.escuelajs.co/api/v1/users`);
+  }
+
   // Local Storage Helpers
   saveToken(token: string): void {
     localStorage.setItem('auth_token', token);

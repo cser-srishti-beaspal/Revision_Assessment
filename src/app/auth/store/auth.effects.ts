@@ -23,7 +23,6 @@ export class AuthEffects {
             return AuthActions.loginSuccess({ token: response.access_token });
           }),
           catchError((error) => {
-            // Platzi Fake Store API error format might differ, standardizing error message
             const errorMsg = error.error?.message || 'Login failed. Please check your credentials.';
             return of(AuthActions.loginFailure({ error: errorMsg }));
           })
@@ -87,6 +86,33 @@ export class AuthEffects {
         }
         return AuthActions.autoLoginFailure();
       })
+    )
+  );
+
+  // Effect to load demo accounts from Platzi API
+  loadDemoUsers$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.loadDemoUsers),
+      mergeMap(() =>
+        this.authService.getDemoUsers().pipe(
+          map((users) => {
+            const demoAdmins = users
+              .filter(u => u.role === 'admin')
+              .slice(0, 2)
+              .map(u => ({ email: u.email, name: u.name, role: u.role, password: u.password }));
+              
+            const demoUsers = users
+              .filter(u => u.role === 'customer' || u.role === 'user')
+              .slice(0, 2)
+              .map(u => ({ email: u.email, name: u.name, role: u.role, password: u.password }));
+
+            return AuthActions.loadDemoUsersSuccess({ demoAdmins, demoUsers });
+          }),
+          catchError((error) => {
+            return of(AuthActions.loadDemoUsersFailure({ error: 'Failed to load demo accounts.' }));
+          })
+        )
+      )
     )
   );
 
