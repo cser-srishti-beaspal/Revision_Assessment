@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../auth/services/auth.service';
 import { AuthFacade } from '../../auth/services/auth.facade';
 import { take } from 'rxjs/operators';
 
@@ -21,7 +21,7 @@ interface ApiUser {
 })
 export class AdminDashboardComponent implements OnInit {
   private authFacade = inject(AuthFacade);
-  private http = inject(HttpClient);
+  private authService = inject(AuthService); // Injecting AuthService instead of HttpClient
 
   user$ = this.authFacade.user$;
   systemUsers: ApiUser[] = [];
@@ -35,7 +35,8 @@ export class AdminDashboardComponent implements OnInit {
   fetchSystemUsers(): void {
     this.loadingUsers = true;
     this.userError = '';
-    this.http.get<ApiUser[]>('https://api.escuelajs.co/api/v1/users').pipe(
+    // Query users via AuthService rather than direct HttpClient calls
+    this.authService.getUsers().pipe(
       take(1)
     ).subscribe({
       next: (users) => {

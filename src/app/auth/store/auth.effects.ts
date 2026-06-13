@@ -84,6 +84,8 @@ export class AuthEffects {
         if (token && user) {
           return AuthActions.autoLoginSuccess({ token, user });
         }
+        // Clear storage of any corrupted/expired data upon failure
+        this.authService.clearStorage();
         return AuthActions.autoLoginFailure();
       })
     )

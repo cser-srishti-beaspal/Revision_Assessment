@@ -19,7 +19,11 @@ export class AuthService {
   }
 
   getDemoUsers(): Observable<any[]> {
-    // Queries https://api.escuelajs.co/api/v1/users
+    return this.http.get<any[]>(`https://api.escuelajs.co/api/v1/users`);
+  }
+
+  // Dedicated data retrieval method for administration dashboard to respect SRP
+  getUsers(): Observable<any[]> {
     return this.http.get<any[]>(`https://api.escuelajs.co/api/v1/users`);
   }
 
